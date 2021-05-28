@@ -25,19 +25,20 @@ train <- cbind(trainPpl,trainActivities,train)
 # Merge the 2 sets
 all<- rbind(test,train)
 
-# Extract means and standard deviations
-library(dplyr)
-meanStd <- select(all,contains("mean")|contains("std"))
-meanStd
-
 
 # Rename the activity values to be descriptive
 all$activity <- recode(all$activity,"1"="Walking","2"="Walking Upstairs",
      "3"="Walking Downstairs", "4"="Sitting", "5"="Standing","6"="Laying")
 
-# Average by activity and subject
+# Extract means and standard deviations to get data set 1
+library(dplyr)
+meanStd <- select(all,contains("mean")|contains("std"))
+
+# Average by activity and subject for data set 2
 actSub <- group_by(all,activity,subject)
 summarized <- actSub %>% mutate(across(1:561,mean,.names = "mean {.col}"),
                          .keep="unused")
-summarized
+
+# Output the first data set
+meanStd
 
